@@ -1,12 +1,21 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const data = require("./data");
+const templateGenerator = require("./template");
+
+let tray = null;
+let mainWindow = null;
 
 app.on("ready", () => {
   console.log("Aplicacao iniciada");
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 600,
     height: 400,
   });
+
+  tray = new Tray(__dirname + "/app/img/icon-tray.png");
+  let template = templateGenerator.geraTrayTemplate(mainWindow);
+  let trayMenu = Menu.buildFromTemplate(template);
+  tray.setContextMenu(trayMenu);
 
   mainWindow.loadURL(`file://${__dirname}/app/index.html`);
 });
@@ -39,4 +48,10 @@ ipcMain.on("fechar-janela-sobre", () => {
 
 ipcMain.on("curso-parado", (event, curso, tempo) => {
   data.salvaDados(curso, tempo);
+});
+
+ipcMain.on("curso-adicionado", (event, curso) => {
+  let novoTemplate = templateGenerator.adicionaCursoTray(curso, mainWindow);
+  let novoTrayMenu = Menu.buildFromTemplate(novoTemplate);
+  tray.setContextMenu(novoTrayMenu);
 });

@@ -40,4 +40,12 @@ module.exports = {
     const caminhoCurso = __dirname + "/data/" + curso + ".json";
     return jsonfile.readFile(caminhoCurso);
   },
+  pegaNomeDosCursos() {
+    let arquivos = fs.readdirSync(__dirname + "/data");
+    let cursos = arquivos.map((arquivo) => {
+      return arquivo.substr(0, arquivo.lastIndexOf("."));
+    });
+
+    return cursos;
+  },
 };
