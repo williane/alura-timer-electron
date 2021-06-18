@@ -1,7 +1,7 @@
 const { ipcRenderer } = require("electron");
 const moment = require("moment");
 let timer;
-let tempoSegundos;
+let tempoSegundos = 0;
 let time;
 
 module.exports = {
